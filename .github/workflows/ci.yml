@@ -1,4 +1,4 @@
-name: Spring Boot CI
+name: Spring Boot CI/CD
 
 on:
   push:
@@ -25,3 +25,7 @@ jobs:
 
       - name: Build Docker image
         run: docker build -t spring-security .
+
+      - name: Run container (CD step)
+        run: |
+          docker run -d -p 8080:8080 spring-security
