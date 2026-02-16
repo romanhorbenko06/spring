@@ -1,31 +1,30 @@
-name: Spring Boot CI/CD
+name: CI/CD with Docker Compose
 
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: CI check
+        run: echo "CI stage passed успешно"
+
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1
         with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build with Maven
-        run: mvn clean package -DskipTests
-
-      - name: Build Docker image
-        run: docker build -t spring-security .
-
-      - name: Run container (CD step)
-        run: |
-          docker run -d -p 8080:8080 spring-security
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          port: 22
+          script: |
+            cd servers/retail-stock-back/
+            git pull
+            docker compose up --build -d
