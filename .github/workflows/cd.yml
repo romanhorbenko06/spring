@@ -1,0 +1,15 @@
+name: Spring Boot CD (disabled)
+
+on:
+  workflow_dispatch:   # тільки вручну
+  # push:
+  #   branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH (placeholder)
+        run: |
+          echo "CD is ready, but server is not configured yet"
